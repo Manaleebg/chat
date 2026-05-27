@@ -136,7 +136,7 @@ public class SecurityConfig {
 
                 registry.addMapping("/**")
 
-                        .allowedOrigins("http://localhost:3000")
+                        .allowedOrigins("https://chat-eight-lac.vercel.app")
 
                         .allowedMethods("*")
 
@@ -174,7 +174,8 @@ public class SecurityConfig {
 
                             "/api/auth/register",
 
-                            "/api/auth/login"
+                            "/api/auth/login",
+                            "/api/auth/me"
 
                     ).permitAll()
 
