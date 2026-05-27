@@ -16,7 +16,7 @@ import com.ai.chat.services.SarvamAiService;
 
 @RestController
 @RequestMapping("/api/chat")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+
 public class ChatController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class ChatController {
     @Autowired
     private SarvamAiService sarvamAiService;
 
-    // ✅ FIXED: removed "/response" so frontend /api/chat works directly
+
     @PostMapping
     public ChatResponse chat(@RequestBody ChatRequest request, Principal principal) {
 
