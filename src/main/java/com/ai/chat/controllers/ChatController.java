@@ -28,32 +28,40 @@ public class ChatController {
     private SarvamAiService sarvamAiService;
 
     @PostMapping
-    public ChatResponse chat(@RequestBody ChatRequest request, Principal principal) {
+    public ChatResponse chat(
+            @RequestBody ChatRequest request,
+            Principal principal
+    ) {
 
         if (principal == null) {
             return new ChatResponse("User not authenticated");
         }
 
         AppUser user = user_repo.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
 
-        List<ChatMessage> history = chatrepo.findByUserOrderByCreatedAtAsc(user);
+        List<ChatMessage> history =
+                chatrepo.findByUserOrderByCreatedAtAsc(user);
 
-        // save user message
         ChatMessage userMsg = new ChatMessage();
         userMsg.setRole("user");
         userMsg.setContent(request.getMessage());
         userMsg.setUser(user);
+
         chatrepo.save(userMsg);
 
-        // AI response
-        String ai_reply = sarvamAiService.askSarvam(history, request.getMessage());
+        String ai_reply =
+                sarvamAiService.askSarvam(
+                        history,
+                        request.getMessage()
+                );
 
-        // save AI message
         ChatMessage aiMsg = new ChatMessage();
         aiMsg.setRole("assistant");
         aiMsg.setContent(ai_reply);
         aiMsg.setUser(user);
+
         chatrepo.save(aiMsg);
 
         return new ChatResponse(ai_reply);
@@ -67,7 +75,8 @@ public class ChatController {
         }
 
         AppUser user = user_repo.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
 
         return chatrepo.findByUserOrderByCreatedAtAsc(user);
     }
