@@ -82,21 +82,42 @@ function App() {
     const userText = input;
     setInput("");
 
+    // user message show immediately
     setMessages((prev) => [
       ...prev,
       { role: "user", content: userText },
     ]);
 
-    const res = await api.post(`${API_BASE_URL}/api/chat/response`, {
-      message: userText,
-    });
+    try {
+      const res = await api.post(
+        `${API_BASE_URL}/api/chat`,
+        {
+          message: userText,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", content: res.data.reply },
-    ]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: res.data.reply,
+        },
+      ]);
+    } catch (err) {
+      console.error(err);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Failed to get AI response",
+        },
+      ]);
+    }
   };
-
   if (!user) {
     return (
       <div className="auth-container">

@@ -16,7 +16,6 @@ import com.ai.chat.services.SarvamAiService;
 
 @RestController
 @RequestMapping("/api/chat")
-
 public class ChatController {
 
     @Autowired
@@ -28,11 +27,9 @@ public class ChatController {
     @Autowired
     private SarvamAiService sarvamAiService;
 
-
     @PostMapping
     public ChatResponse chat(@RequestBody ChatRequest request, Principal principal) {
 
-        // ❗ safety check (prevents null crash)
         if (principal == null) {
             return new ChatResponse("User not authenticated");
         }
