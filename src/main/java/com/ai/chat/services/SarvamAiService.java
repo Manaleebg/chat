@@ -60,12 +60,29 @@ public String askSarvam(List<ChatMessage> history, String userMessage) {
  header.setBearerAuth(apikey);
  HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body,header);
  
- ResponseEntity<Map> response =
-	        restTemplate.postForEntity(url, entity, Map.class);
+ try {
 
-	List choice = (List) response.getBody().get("choices");
-	Map firstChoice = (Map) choice.get(0);
-	Map message1 = (Map) firstChoice.get("message");
-	return message1.get("content").toString();
+	    ResponseEntity<Map> response =
+	            restTemplate.postForEntity(url, entity, Map.class);
+
+	    System.out.println("SARVAM RESPONSE: " + response.getBody());
+
+	    List choice = (List) response.getBody().get("choices");
+
+	    if (choice == null || choice.isEmpty()) {
+	        return "No response from AI";
+	    }
+
+	    Map firstChoice = (Map) choice.get(0);
+	    Map message1 = (Map) firstChoice.get("message");
+
+	    return message1.get("content").toString();
+
+	} catch (Exception e) {
+
+	    e.printStackTrace();
+
+	    return "Error calling Sarvam AI: " + e.getMessage();
+	}
 }
 }
